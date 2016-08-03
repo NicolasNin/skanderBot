@@ -21,12 +21,12 @@ class MessageForum():
 		#data for markov class folowing 
 		self.concatenatedWords=[]
 		if "APOILusername" not in os.environ.keys():
-			self.username=input("Username of APOIL FORUM ? This will be added to $APOILusername: ")
+			self.username=input("Username of APOIL FORUM ? You should do export APOILusername=yourusername ")
 			os.environ["APOILusername"]=self.username
 		else:
 			self.username=os.environ["APOILusername"]	
 		if "APOILpassword" not in os.environ.keys():
-			self.password=input("Username of APOIL FORUM ? This will be added to $APOILpassword: ")
+			self.password=input("Password of APOIL FORUM ?  ")
 			os.environ["APOILpassword"]=self.password
 		else:
 			self.password=os.environ["APOILpassword"]	
