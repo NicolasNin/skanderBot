@@ -9,6 +9,7 @@ you need your username and login
 you can export them as an environment variable if you dont want to do it many times
 
 export APOILusername="your user name"
+
 export APOILpassword="your password"
 
 
