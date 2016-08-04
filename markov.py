@@ -16,6 +16,7 @@ class Markov(object):
 	
 	
 	def generate_markov_text2(self,size=25):
+		""" problem whne no message"""
 		if 	self.initToken:
 			#we choose randomly among the keys begining with the initToken ie self.token.initkeys
 			#if n=1 there is only one such key (possibly repeated
@@ -28,7 +29,7 @@ class Markov(object):
 		gen_words=list(key)
 		for i in range(size):
 			try:
-				print(key)
+				
 				value=random.choice(self.cache[key])
 			except KeyError as e:
 				print(e)
@@ -47,10 +48,11 @@ def main():
 	user=input("Who do you want to generate ? \n")
 	skanderMsg=MessageForum(user)
 	#we retrieve message and compute concatenated words for the markoc class
-	skanderMsg.retrieveAllMsg()
-	skanderMarkov=Markov(skanderMsg.getAllMessages())
+	isok=skanderMsg.retrieveAllMsg()
+	if (isok=="Success"):
+		skanderMarkov=Markov(skanderMsg.getAllMessages())
 	#we test
-	print(skanderMarkov.generate_markov_text2())
-
+		print(skanderMarkov.generate_markov_text2())
+	
 if __name__=='__main__':
 	main()

@@ -5,8 +5,7 @@ import urllib
 import requests
 import getpass
 
-#il faut rajouter des verif sur la conexion sinon la liste des messages sera vide car on sera sur une page de conection
-#potentile problem: pb de conection avec les login/pss, probleme d'user, probleme de web ajouter exception HTTPerror 
+#la connection est check, il reste encore des pb de web httperror, et zeros messages
 class MessageForum():
 	""" This class goal is to retrieve message from a given user of the APOIL forum 
 		at init it doesnt do anything you have to run getAllMsg to compute them
@@ -18,7 +17,10 @@ class MessageForum():
 		self.allMessages=[]
 		#data for markov  
 		self.concatenatedWords=[]
+		self.connected=False
+		self.connect()
 		
+	def connect(self):
 		if "APOILusername" not in os.environ.keys():
 			self.username=input("Username of APOIL FORUM ? You should do export APOILusername=yourusername ")
 			os.environ["APOILusername"]=self.username
@@ -29,7 +31,18 @@ class MessageForum():
 			os.environ["APOILpassword"]=self.password
 		else:
 			self.password=os.environ["APOILpassword"]	
-			
+		self.s = requests.session()
+		print("connecting to forum")
+		urlbase="http://apoil.forumactif.com/"
+		url="http://apoil.forumactif.com/login"
+		page=self.s.get(url)
+		headers={'username':self.username ,	'password': self.password,	"autologin":"on",	'redirect':"",	'query':"",	'login':"Connexion"	}
+		auth = self.s.post(url, params=headers, cookies=page.cookies)
+		if auth.url!=urlbase:
+			print("Error could not connect to site, try changing password or username")
+		else:
+			self.connected=True
+			print("success connecting")
 	def liste_message(self,page_messages):
 		"""takes beautifoul souup html into input  output: une liste de message en texte de l'url donnee"""
 		listeMessageText=[]
@@ -40,31 +53,34 @@ class MessageForum():
 	def retrieveAllMsg(self,force=False):
 		"""en input l'url de la page forum actif de message d'un user en output liste de tous les messages en texte"""
 		if self.allMessages==[] or  force:
-			#d'abord on se connecte
-			print("connecting to forum")
-			s = requests.session()
-			url="http://apoil.forumactif.com/login"
-			page=s.get(url)
-			headers={'username':self.username ,	'password': self.password,	"autologin":"on",	'redirect':"",	'query':"",	'login':"Connexion"	}
-			auth = s.post(url, params=headers, cookies=page.cookies)
-			#on fait une boucle sur toutes les pages
-			#ensuite on get la page on envoie a bs
-			url_temp=self.urlMessage
-			liste_all=[]
-			num_pages=1
-			while True:
-				print("retrieving ", url_temp,"pages number",num_pages)
-				member=s.get(url_temp)
-				page=bs(member.text)		#bs du code de la page message du membre donné
-				liste_current=self.liste_message(page)
-				liste_all.extend(liste_current)
-				print("added",len(liste_current)," messages")
-				suiv=page.findAll("img",{"alt":"Suivant"})
-				if len(suiv)==0:
-					break
-				url_temp=self.getUrl(suiv[0].parent.get('href'))
-				num_pages+=1
-			self.allMessages=liste_all	
+			if self.connected:
+				#on fait une boucle sur toutes les pages
+				#ensuite on get la page on envoie a bs
+				url_temp=self.urlMessage
+				liste_all=[]
+				num_pages=1
+				while True:
+					print("retrieving ", url_temp,"pages number",num_pages)
+					member=self.s.get(url_temp)
+					page=bs(member.text)		#bs du code de la page message du membre donné
+					liste_current=self.liste_message(page)
+					liste_all.extend(liste_current)
+					print("added",len(liste_current)," messages")
+					suiv=page.findAll("img",{"alt":"Suivant"})
+					if len(suiv)==0:
+						break
+					url_temp=self.getUrl(suiv[0].parent.get('href'))
+					num_pages+=1
+					
+				self.allMessages=liste_all
+				if liste_all!=[]: 
+					return "Success"
+				else:
+					print("No message for user maybe inexisting")
+					return "Failure"
+			else:
+				print("you have to be connected first, before retrieving messages")
+				return "Failure"	
 	def nettoyer(self,message):
 		"""input: bs tag, retourne du texte sans html avec les quotes en moins"""
 		for quote in message.findAll("dl",{"class":"codebox"}):
@@ -73,6 +89,8 @@ class MessageForum():
 	def getUrl(self,relativ_url):
 		return "http://apoil.forumactif.com"+relativ_url 
 	def getAllMessages(self):
+		if self.allMessages==[]:
+			return " Error empty"
 		return self.allMessages
 	def createConcatenatedWordList(self):
 		""" liste de mot qui se suivent que l'on donne a manger a la classe d'apres"""
@@ -89,7 +107,6 @@ def main():
 	skanderMsg=MessageForum("Skander")
 	#we retrieve message and compute concatenated words for the markoc class
 	skanderMsg.retrieveAllMsg()
-	skanderMsg.createWordList()
 
 
 if __name__=='__main__':
