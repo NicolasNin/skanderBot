@@ -12,6 +12,9 @@ export APOILusername="your user name"
 
 export APOILpassword="your password"
 
+you can test it by runing 
+
+python3 markov.py
 
 =======================
 It uses the code from  http://agiliq.com/blog/2009/06/generating-pseudo-random-text-with-markov-chains-u/
