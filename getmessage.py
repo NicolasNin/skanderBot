@@ -3,7 +3,7 @@ import os
 from  bs4 import BeautifulSoup as bs
 import urllib
 import requests
-	
+import getpass
 
 #il faut rajouter des verif sur la conexion sinon la liste des messages sera vide car on sera sur une page de conection
 #potentile problem: pb de conection avec les login/pss, probleme d'user, probleme de web ajouter exception HTTPerror 
@@ -25,7 +25,7 @@ class MessageForum():
 		else:
 			self.username=os.environ["APOILusername"]	
 		if "APOILpassword" not in os.environ.keys():
-			self.password=input("Password of APOIL FORUM ?  ")
+			self.password=getpass.getpass("Password of APOIL FORUM ?  ")
 			os.environ["APOILpassword"]=self.password
 		else:
 			self.password=os.environ["APOILpassword"]	

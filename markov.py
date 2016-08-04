@@ -41,17 +41,16 @@ class Markov(object):
 
 
 
-skmar=Markov(skm.getAllMessages(),n=2,concatenate=False,initToken=True)
-print(skmar.generate_markov_text2())
+#skmar=Markov(skm.getAllMessages(),n=2,concatenate=False,initToken=True)
+#print(skmar.generate_markov_text2())
 def main():
 	print("testing with skander")
 	skanderMsg=MessageForum("Skander")
 	#we retrieve message and compute concatenated words for the markoc class
 	skanderMsg.retrieveAllMsg()
-	skanderMsg.createWordList()
-	skanderMarkov=Markov([skanderMsg.getWordList()])
+	skanderMarkov=Markov(skanderMsg.getAllMessages())
 	#we test
-	print(skanderMarkov.generate_markov_text())
+	print(skanderMarkov.generate_markov_text2())
 
 if __name__=='__main__':
 	main()
