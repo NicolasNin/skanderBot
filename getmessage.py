@@ -16,8 +16,9 @@ class MessageForum():
 		self.user=user		#user we wish to get message from the forum
 		self.urlMessage=self.getUrl("/spa/"+ urllib.parse.quote(self.user))
 		self.allMessages=[]
-		#data for markov class folowing 
+		#data for markov  
 		self.concatenatedWords=[]
+		
 		if "APOILusername" not in os.environ.keys():
 			self.username=input("Username of APOIL FORUM ? You should do export APOILusername=yourusername ")
 			os.environ["APOILusername"]=self.username
@@ -73,7 +74,7 @@ class MessageForum():
 		return "http://apoil.forumactif.com"+relativ_url 
 	def getAllMessages(self):
 		return self.allMessages
-	def createWordList(self):
+	def createConcatenatedWordList(self):
 		""" liste de mot qui se suivent que l'on donne a manger a la classe d'apres"""
 		if self.allMessages==[]:
 			print("you should retrieve message first")
