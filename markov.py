@@ -44,8 +44,8 @@ class Markov(object):
 #skmar=Markov(skm.getAllMessages(),n=2,concatenate=False,initToken=True)
 #print(skmar.generate_markov_text2())
 def main():
-	print("testing with skander")
-	skanderMsg=MessageForum("Skander")
+	user=input("Who do you want to generate ? \n")
+	skanderMsg=MessageForum(user)
 	#we retrieve message and compute concatenated words for the markoc class
 	skanderMsg.retrieveAllMsg()
 	skanderMarkov=Markov(skanderMsg.getAllMessages())
