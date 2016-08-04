@@ -47,5 +47,6 @@ In [7]: usermarkov2=Markov(skdmsg.getAllMessages(),n=1,concatenate=False,initTok
 In [10]: usermarkov2.generate_markov_text2(50)
 
 This option is the number of words(token) int the generated message
+
 =======================
 It uses the code from  http://agiliq.com/blog/2009/06/generating-pseudo-random-text-with-markov-chains-u/
