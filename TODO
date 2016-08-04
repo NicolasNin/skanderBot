@@ -3,3 +3,15 @@ TODO
 - get all messages not only 450 max
 - integrate to slack
 - have generated messages begin with a true start of a forum post
+
+
+Structur
+The Markov class will handle the other. This class do 3 things:
+
+- 1) take an input
+--> this will give a liste of list of words (possibly only one list if this comes from a standalone text for ex)
+- 2) generate token
+---> this generate a dict of (keys: values) where values possibly multiples keys can be one word, or many, or it can use character if the input are charactere)
+---> here we can add special token before each list to say that its the start that way we can start from this special token if we want good starting sentences
+- 3)write ouput
+--->different rules if we chose a random start or a particular token
